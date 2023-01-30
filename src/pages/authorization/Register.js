@@ -121,7 +121,7 @@ function Register() {
                 </div>
                 <div className="d-flex justify-content-center ">
 
-                <button type="submit" className="btn btn-primary">Zaloguj</button>
+                <button type="submit" className="btn btn-primary">Zarejestruj</button>
                 </div>
               </form> 
             </div>

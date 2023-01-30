@@ -6,7 +6,7 @@ function Footer() {
         <footer className="container d-flex py-3 my-10 border-top navbar flex-bottom mt-auto ">
         <div className="mx-auto">
             <div className=" d-flex justify-content-center">
-                <span className="mb-3 mb-md-0 text-muted">© Wojciech Klicki  <a href="https://github.com/Klit3k"><button className='btn btn-sm mb-1 text-muted'><Github size={19}/></button></a>
+                <span className="mb-3 mb-md-0 text-muted">© WAT <a href="https://github.com/Klit3k"><button className='btn btn-sm mb-1 text-muted'><Github size={19}/></button></a>
                 </span>
                 
             </div>

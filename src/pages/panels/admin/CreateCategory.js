@@ -62,7 +62,7 @@ const CreateCategory = () => {
             <input type="text" name="name" onChange={handleInputChange} class="form-control"/>
           </div>
           <div class="col">
-            <button type="text" type="submit" onClick={handleSubmit} class="form-control btn btn-outline-success mt-3">Send</button>
+            <button type="submit" onClick={handleSubmit} class="form-control btn btn-outline-success mt-3">Send</button>
           </div>
         </div>
       </div>
