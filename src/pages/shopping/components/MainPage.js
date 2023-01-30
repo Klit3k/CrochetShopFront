@@ -4,7 +4,9 @@ import Products from '../fetchers/products'
 import { useOutletContext } from "react-router-dom";
 import { EmojiSmile } from 'react-bootstrap-icons'; 
 const MainPage = () => {
-    const { products, handleClick} = useOutletContext();
+    const { products, handleClick, cart} = useOutletContext();
+
+    
     return (
         <div className="Home mb-5">
             {Array.from(products).length === 0 ? (
@@ -22,7 +24,7 @@ const MainPage = () => {
                             <h4>Dostępne produkty ({products.length})</h4>
                         </div>
                             {Array.from(products).map((product) => (
-                                <Cards key={product.id} product={product} handleClick={handleClick}/>
+                                <Cards key={product.id} product={product} handleClick={handleClick} cart={cart}/>
                             ))}
                         </div>
                     </div>

@@ -12,10 +12,21 @@ const Shopping = () => {
   const [cart, setCart] = useState([]);
 
   const handleClickCart = (item) => {
+    const cookies = new Cookies()
+
     setCart([...cart, item]);
+
+    if(cart.length === 0){
+      localStorage.setItem('cart', JSON.stringify(item))
+    }else {
+      localStorage.setItem('cart', JSON.stringify(cart))
+    }
   };  
 
+  useEffect(() => {
 
+  }, [cart])
+  
 
   return (
     <div className='d-flex flex-column min-vh-100'>

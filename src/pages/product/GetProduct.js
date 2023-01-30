@@ -6,14 +6,42 @@ import Comments from './comment/comments'
 import Pagination from './comment/Pagination'
 import { COMMENTS_PER_PAGE } from '../../utils/constants'
 import Cookies from 'universal-cookie';
+import { useOutletContext } from "react-router-dom";
+import { CheckSquareFill } from 'react-bootstrap-icons'
 
-
+function shallowEqual(object1, object2) {
+    const keys1 = Object.keys(object1);
+    const keys2 = Object.keys(object2);
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+    for (let key of keys1) {
+      if (object1[key] !== object2[key]) {
+        return false;
+      }
+    }
+    return true;
+  }
 function GetProduct() {
+    const { handleClick, cart } = useOutletContext();
+
+    const [ buttonDisabled, setButtonDisabled] = useState({disabled: false});
+    const [buttonText, setButtonText] = useState("Dodaj do koszyka");
+
+
     const { id } = useParams()
     const [page, setPage] = useState(1); 
     const [state, setState] = useState({
         loaded: false,})
-    const [getProduct, setProduct] = useState([])
+    const [getProduct, setProduct] = useState({
+        additionalImages: [],
+        comments: [],
+        description: [],
+        id: 0,
+        image: [],
+        name: "",
+        price: 0
+    })
 
     const [totalPages, setTotalPages] = useState(0);
     const [validData, setValidData] = useState(true);
@@ -100,15 +128,16 @@ function GetProduct() {
          return response;
        };
     //-------
-    var getProductServer = async () => {
+    const getProductServer = async () => {
         setState({ loaded: false })
-        await axios
+        const response = await axios
             .get('http://localhost:8080/product', {
                 params: {
                     productId: id,
                 },
             })
-            .then((response) => {
+            .then(response => {
+               
                 if (response.data.image === null) {
                     response.data.image = {
                         id: 0,
@@ -119,29 +148,41 @@ function GetProduct() {
 
                 setProduct(response.data )
                 setTotalPages(Math.ceil(response.data.comments.length / COMMENTS_PER_PAGE));
-            })
-            .catch((err) => {
+                
+                setState({ loaded: true })
+
+                console.log("button", Array.from(cart).includes(response.data))
+            }).catch((err) => {
                 switch (err.response.status) {
-                    case 403:
-                        //   setState({
-                        //     email: state.email,
-                        //     password: state.password,
-                        //     validData: "Invalid credentials"
-                        //   });
-                        break
                     default:
+                        console.log("Something went wrong")
                         break
                 }
             })
-            setState({ loaded: true })
+            
+            
     }
+    const check = (getProduct) => {
+        handleClick(getProduct); 
 
+        setButtonDisabled({disabled: true});
+                console.log("git")
+                setButtonText(<>Dodano do koszyka<CheckSquareFill size={20}/></>)
+           
+            
+    }
     useEffect(() => {
         getProductServer()   
-        console.log(user)
-    }, [])
+        if(cart !== undefined && getProduct !== undefined){
+            if(Array.from(cart).filter(e => e.id === getProduct.id).length > 0){
+                setButtonDisabled({disabled: true});
+                console.log("git")
+                setButtonText(<>Dodano do koszyka<CheckSquareFill size={20}/></>)
+              }
+            }
+    }, [state.loaded, buttonDisabled.disabled])
 
-    const handleClick = (num) => {
+    const handleClick2 = (num) => {
         setPage(num);
     }
 
@@ -183,9 +224,11 @@ function GetProduct() {
                                     <button
                                         className="btn btn-outline-dark flex-shrink-0"
                                         type="button"
+                                        onClick={() => {check(getProduct)}}
+                                        disabled={buttonDisabled.disabled}
                                     >
                                         <i className="bi-cart-fill me-1"></i>
-                                        Dodaj do koszyka
+                                        {buttonText}
                                     </button>
                                 </form>
                             </div>
@@ -216,7 +259,7 @@ function GetProduct() {
                             getProduct.comments.length === 0 ? <div className='text-center'> Brak komentarzy do wyświetlenia </div> : null
                         }
                         <Comments comments={getProduct.comments} page={page}/>
-                        <Pagination totalPages={totalPages} handleClick={handleClick}/>
+                        <Pagination totalPages={totalPages} handleClick={handleClick2}/>
                         </div>
                     </div>
                 </div>

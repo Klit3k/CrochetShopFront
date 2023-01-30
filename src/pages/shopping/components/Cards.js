@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink, useOutletContext } from "react-router-dom";
 import { CheckSquareFill } from 'react-bootstrap-icons';
-const Cards = ({product, handleClick}) => {
-  const { cart } = useOutletContext();
+const Cards = ({product, handleClick, cart}) => {
 
   const [state, setState] = useState({
     disabled: false
@@ -10,10 +9,10 @@ const Cards = ({product, handleClick}) => {
   const [buttonText, setButtonText] = useState("Dodaj do koszyka");
 
   useEffect(() => {
-
-    if(cart.includes(product)){
+    
+    if(Array.from(cart).filter(e => e.id === product.id).length > 0){
       setState({disabled: true});
-      console.log("git")
+      console.log("1")
       setButtonText(<><CheckSquareFill size={20}/></>)
     }
 

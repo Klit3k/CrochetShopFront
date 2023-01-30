@@ -1,10 +1,13 @@
 import React from 'react'
 import GetProduct from '../fetchers/product';
 import { useParams } from 'react-router-dom'
+import { useOutletContext } from "react-router-dom";
 
 const Product = () => {
   const { id } = useParams();
   const product = GetProduct(id);
+  const { handleClick } = useOutletContext();
+
   return (
     <div className="container px-4 px-lg-5 my-3">
                     <div className="row mx-auto">
@@ -33,6 +36,7 @@ const Product = () => {
                                     <button
                                         className="btn btn-outline-dark flex-shrink-0"
                                         type="button"
+                                        onClick={() => handleClick(product)}
                                     >
                                         <i className="bi-cart-fill me-1"></i>
                                         Dodaj do koszyka

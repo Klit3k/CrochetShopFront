@@ -12,7 +12,15 @@ export const Cart = () => {
   const [res, setRes] = useState(null);
   const [redirectUri, setRedirectUri] = useState("");
   const [state, setState] = useState(false);
+  const [reload, setReload] = useState(false);
 
+  const handleRemoveFromCart = (product) => {
+    var index = cart.indexOf(product);
+    if (index !== -1) {
+      cart.splice(index, 1);
+    }  
+    setReload(!reload);
+  }
   const sendCart = async (userId, productId) => {
     await axios
       .post("http://localhost:8080/cart", null, {
@@ -71,7 +79,7 @@ export const Cart = () => {
 
   useEffect(() => {
 
-  }, [state])
+  }, [state, reload])
   
   return (
    
@@ -86,11 +94,12 @@ export const Cart = () => {
 
                 <div className='d-flex justify-content-center text-center '>
                     <b>Koszyk jest pusty. <br/> Zapraszamy do zakupów</b>
-                    <NavLink to=".." className="btn btn-outline-success "> Powrót </NavLink>
                 </div>
                     
-  
-            
+
+            <div className='d-flex justify-content-center text-center mx-auto mt-3'>
+                    <NavLink to=".." > <button className="btn btn-outline-success ">Powrót</button> </NavLink>
+                </div>
              </div>
 
             : <>
@@ -114,7 +123,7 @@ export const Cart = () => {
                             </td>
                             <td className='col-md-3 ' >{product.name}</td>
                             <td className='col-sm-2 '>{product.price} zł</td>
-                            <td className='col-sm-1'><button  value={product.id} key={product.id}  className='btn btn-outline-dark'>-</button></td>
+                            <td className='col-sm-1'><button  value={product.id} key={product.id} onClick={() => handleRemoveFromCart(product)} className='btn btn-outline-dark mb-3'><Trash3Fill/></button></td>
                             </tr>
                             )
                         })

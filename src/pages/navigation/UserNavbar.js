@@ -40,7 +40,7 @@ function UserNavbar({cartContent}) {
                         <ul className="navbar-nav ms-auto text-center">
                              <li>
                                 <NavLink to="/home/cart" className="nav-link ">
-                                   <var><Cart2 className='mb-1' size={24} color={"green"}/> <sup><b>{cartContent.length}</b></sup></var> <span className='mx-1'>Koszyk</span> 
+                                   <var><Cart2 className='mb-1' size={24} color={"green"}/> <sup><b></b></sup></var> <span className='mx-1'>Koszyk</span> 
                                 </NavLink>
                             </li>
                             <li>
