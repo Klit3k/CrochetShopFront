@@ -29,6 +29,14 @@ import Product from './pages/shopping/components/Product';
 import ThankYou from './ThankYou';
 import RemoveProduct from './pages/product/RemoveProduct';
 import GetProductGuest from './pages/product/GetProductGuest'
+import CreateCategory from './pages/panels/admin/CreateCategory'
+import AddProductToCategory from './pages/panels/admin/AddProductToCategory'
+import RemoveCategory from './pages/panels/admin/RemoveCategory'
+import RemoveProductFromCategory from './pages/panels/admin/RemoveProductFromCategory'
+import ShowCategory from './pages/panels/admin/ShowCategory'
+
+
+
 function App() {
 
   return (
@@ -53,6 +61,10 @@ function App() {
                 <Route path='/admin/product/add' element={<AddProduct/>}/>
                 <Route path='/admin/product/edit' element={<EditProduct/>}/>
                 <Route path="/admin/product/remove" element={<RemoveProduct />}/>
+                <Route path="/admin/product/create-category" element={<CreateCategory />}/>
+                <Route path="/admin/product/add-to-category" element={<AddProductToCategory />}/>
+                <Route path="/admin/product/remove-from-category" element={<RemoveProductFromCategory />}/>
+                <Route path="/admin/product/show-category" element={<ShowCategory />}/>
 
               </Route>
           </Route>

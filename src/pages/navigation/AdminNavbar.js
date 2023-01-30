@@ -8,7 +8,7 @@ function AdminNavbar() {
       //     <NavLink to="/logout" className="nav-link">Wyloguj</NavLink>
       // </div>
       <>
-                  <div className="container">
+                  <div className="container mb-3">
                 <nav className="navbar navbar-expand-md navbar-light">
                     <NavLink to="/home" className="navbar-brand">
                         CrochetShop
@@ -47,8 +47,23 @@ function AdminNavbar() {
                             <NavLink to="product/add" style={{ textDecoration: 'none' }}><div className="dropdown-item" >Dodaj produkt</div></NavLink>
                             <NavLink to="product/edit" style={{ textDecoration: 'none' }}><div className="dropdown-item" >Edytuj produkt</div></NavLink>
                             <NavLink to="product/remove" style={{ textDecoration: 'none' }}><div className="dropdown-item" >Usuń produkt</div></NavLink>
+                            </div>
+                            
+                        </li>
+                        </ul>
+                        <ul className="navbar-nav text-center">
+                            <li className="nav-item dropdown">
+                            <a className="nav-link dropdown-toggle" href="#" id="toggleMobileMenu" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Zarządzanie kategoriami
+                            </a>
+                            <div className="dropdown-menu" aria-labelledby="toggleMobileMenu">
+                            <NavLink to="/admin/product/create-category" style={{ textDecoration: 'none' }}><div className="dropdown-item" >Dodaj kategorie</div></NavLink>
+                            <NavLink to="/admin/product/add-to-category" style={{ textDecoration: 'none' }}><div className="dropdown-item" >Dodaj produkt do kategorii</div></NavLink>
+                            <NavLink to="/admin/product/remove-from-category" style={{ textDecoration: 'none' }}><div className="dropdown-item" >Usuń produkt z kategorii</div></NavLink>
+                            <NavLink to="/admin/product/show-category" style={{ textDecoration: 'none' }}><div className="dropdown-item" >Pokaż kategorię</div></NavLink>
 
                             </div>
+                            
                         </li>
                         </ul>
                         <ul className="navbar-nav ms-auto text-center">
