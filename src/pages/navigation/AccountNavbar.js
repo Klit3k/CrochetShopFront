@@ -4,20 +4,32 @@ import GetUser from '../shopping/fetchers/getUser';
 import AddAddress from '../shopping/components/credentials/AddAddress'
 import axios from 'axios'
 import Cookies from 'universal-cookie';
+import EditContact from '../shopping/components/credentials/EditContact';
 
 const AccountNavbar = () => {
     const [client, setClient] = useState(null);
+    const [credentials, setCredentials] = useState({
+        name: "",
+        surname: "",
+        phone: ""
+    })
     const [validData, setValidData] = useState(true);
-    const [isOpen, setIsOpen] = useState(false);
+    const [validDataCred, setValidDataCred] = useState(true);
+
+    const [isOpenAddress, setIsOpenAddress] = useState(false);
+    const [isOpenCred, setIsOpenCred] = useState(false);
+
     const [reload, setReload] = useState(false);
-    const [sent, setSent] = useState(false);
     const [errorInfo, setErrorInfo] = useState("")
+    const [errorInfoCred, setErrorInfoCred] = useState("")
+
     const [state, setState] = useState(false);
     const [modalContent, setContent] = useState(
         {city: "",
         street: "",
         postalCode: "",
         houseNumber: ""}); 
+
     var getById = async () => {
         var cookie = new Cookies().get("session")
         if(cookie == undefined) return;
@@ -59,14 +71,23 @@ const AccountNavbar = () => {
         setState(true);
 
     };
-    const hideModal = () => {
-        setContent({content: ""});
-        setValidData(true)
-        setIsOpen(false);
-        setReload(!reload)
+    const hideModalAddress = () => {
+        setIsOpenAddress(false);
+        setContent(
+            {city: "",
+            street: "",
+            postalCode: "",
+            houseNumber: ""}); 
     };     
-    const updateData = async () => {
-        await axios.post("http://localhost:8080/add-address", null, {
+
+    const handleSubmitAddress = () => {
+        if(modalContent.city === "" || modalContent.street === "" || modalContent.postalCode === "" || modalContent.houseNumber === "") {
+            setErrorInfo("Uzupełnij formularz.")
+            setValidData(false)
+            console.log("pusty")
+
+        } else {
+            axios.post("http://localhost:8080/add-address", null, {
             params: {
                 clientId: client.id,
                 city: modalContent.city,
@@ -74,34 +95,25 @@ const AccountNavbar = () => {
                 postalCode: modalContent.postalCode,
                 houseNumber: modalContent.houseNumber,
             }
-        })
-        .then(response => {
-          setSent(true);
-        })
-        .catch( err => {
-          switch (err.response.status) {
-            default:
-                setSent(false);
-              break;
-         }
-        });
-    };
-    const handleSubmit = () => {
-        if(modalContent.city === "" || modalContent.street === "" || modalContent.postalCode === "" || modalContent.houseNumber === "") {
-            setErrorInfo("Uzupełnij formularz.")
-            setValidData(false)
-            console.log("pusty")
-        } else {
-            updateData();
-            hideModal();
-            setContent(
-                {city: "",
-                street: "",
-                postalCode: "",
-                houseNumber: ""}); 
+            })
+            .then(response => {
+                hideModalAddress();
+                setValidData(true);
+                setReload(!reload) 
+            })
+            .catch( err => {
+            switch (err.response.status) {
+                default:
+                break;
+            }
+            });
+
         }
+        
+
     }; 
-    const handleInputChange = (event) => {
+
+    const handleInputChangeAddress = (event) => {
         const value = event.target.value;
         setContent({
           ...modalContent,
@@ -109,9 +121,72 @@ const AccountNavbar = () => {
        })
     };
 
+    const handleInputChangeCred = (event) => {
+        const value = event.target.value;
+        setCredentials({
+          ...credentials,
+          [event.target.name]: value
+       })
+    };
+    const hideModalCred = () => {
+        setIsOpenCred(false);
+        setCredentials(
+            {
+                name: "",
+                surname: "",
+                phone: ""
+        }); 
+    };     
+
+    const handleSubmitCred = () => {
+        if(credentials.name === "" || credentials.phone === "" || credentials.surname === "" ) {
+            setErrorInfo("Uzupełnij formularz.")
+            setValidData(false)
+            console.log("pusty")
+        } else {
+            axios.post("http://localhost:8080/client/edit", null, {
+            params: {
+                id: client.id,
+                name: credentials.name,
+                surname: credentials.surname,
+                phone: credentials.phone
+            }
+            })
+            .then(response => {
+                if(response.status === 200) {
+                    hideModalCred();
+                    setValidDataCred(true);
+                    setReload(!reload) 
+                    console.log(response.status)
+                }
+                
+            })
+            .catch( err => {
+            switch (err.response.status) {
+                case 404:
+                    setErrorInfoCred("Coś poszło nie tak.");
+                    setValidDataCred(false);
+                    console.log(404);
+                    break;
+                case 400:
+                    setErrorInfoCred("Uzupełnij poprawnie formularz.")
+                    setValidDataCred(false);
+                    console.log(400);
+                    break;
+                default:
+                break;
+            }
+            });
+
+        }
+        
+
+    }; 
+    
     useEffect(() => {
         getById();
-    }, [errorInfo, reload])
+    }, [errorInfo, reload, errorInfoCred])
+
    const renderSwitch = (param, o) => {
         switch(param) {
           case "Zrealizowane":
@@ -239,27 +314,36 @@ const AccountNavbar = () => {
                 </div>
                 <div className='d-flex flex-row justify-content-center '>
           
-                <button className='btn btn-outline-dark col-2 mx-2'>Zmień dane kontaktowe</button>
-                
+                <EditContact 
+                                                    handleSubmit={handleSubmitCred}
+                                                    hideModal={hideModalCred}
+                                                    content={credentials}
+                                                    handleInputChange={handleInputChangeCred}
+                                                    setIsOpen={setIsOpenCred}
+                                                    isOpen={isOpenCred}
+                                                    validData={validDataCred}
+                                                    errorInfo={errorInfoCred}
+                                                    text={"Zmień dane kontaktowe"}
+                                                    />
            
                 { client.address === undefined ? (<AddAddress 
-                        handleSubmit={handleSubmit}
-                        hideModal={hideModal}
+                        handleSubmit={handleSubmitAddress}
+                        hideModal={hideModalAddress}
                         content={modalContent.content}
-                        handleInputChange={handleInputChange}
-                        setIsOpen={setIsOpen}
-                        isOpen={isOpen}
+                        handleInputChange={handleInputChangeAddress}
+                        setIsOpen={setIsOpenAddress}
+                        isOpen={isOpenAddress}
                         validData={validData}
                         errorInfo={errorInfo}
                         text={"Edytuj adres"}
                         /> ) : 
                                                  (<AddAddress 
-                                                    handleSubmit={handleSubmit}
-                                                    hideModal={hideModal}
+                                                    handleSubmit={handleSubmitAddress}
+                                                    hideModal={hideModalAddress}
                                                     content={modalContent.content}
-                                                    handleInputChange={handleInputChange}
-                                                    setIsOpen={setIsOpen}
-                                                    isOpen={isOpen}
+                                                    handleInputChange={handleInputChangeAddress}
+                                                    setIsOpen={setIsOpenAddress}
+                                                    isOpen={isOpenAddress}
                                                     validData={validData}
                                                     errorInfo={errorInfo}
                                                     text={"Dodaj adres"}

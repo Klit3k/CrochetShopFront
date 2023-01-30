@@ -23,7 +23,7 @@ function shallowEqual(object1, object2) {
     return true;
   }
 function GetProduct() {
-    const { handleClick, cart } = useOutletContext();
+    const { handleClick, cart, user } = useOutletContext();
 
     const [ buttonDisabled, setButtonDisabled] = useState({disabled: false});
     const [buttonText, setButtonText] = useState("Dodaj do koszyka");
@@ -32,7 +32,7 @@ function GetProduct() {
     const { id } = useParams()
     const [page, setPage] = useState(1); 
     const [state, setState] = useState({
-        loaded: false,})
+        loaded: false,});
     const [getProduct, setProduct] = useState({
         additionalImages: [],
         comments: [],
@@ -47,90 +47,57 @@ function GetProduct() {
     const [validData, setValidData] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
     const [modalContent, setContent] = useState({content: ""});
-
-    const [checkModal, setCheckModal] = useState(false);
-    const [errorInfo, setErrorInfo] = useState("")
-    const [user, setUser] = useState({
-        clientId: 0
-    })
-    const handleSubmit = () => {
-        addComent();
-        console.log(`Valid: ${validData}, checkModal: ${checkModal}`)
-    };
-
-    const hideModal = () => {
-        setContent({content: ""});
-        setIsOpen(false);
-    };
-
-    const addComent = async () => {
-        setCheckModal(false)
-        var cookie = new Cookies().get("session")
-        if(cookie == undefined) return;
-        console.log(cookie.email)
-
-        
-        await axios.get("http://localhost:8080/client-id", {
-            params: {
-                email: cookie.email
-            }
-        })
-        .then((response) => 
-           {
-            setUser({
-                clientId: response.data.clientId
-            })
-       }).catch(err => { 
-            switch(err.response.status) {
-                case 404:
-                    console.log("User not found."+err)
-                    break;
-                default:
-                    console.log("Something went wrong."+err)
-                    break;
-            }
-       })
-
-
-        const response = await axios.post("http://localhost:8080/comment", null, {
+    const [reload, setReload] = useState(false);
+    const [resp, setResp] = useState();
+    const [errorInfo, setErrorInfo] = useState("");
+    const handleSubmit = async () => {
+        axios.post("http://localhost:8080/comment", null, {
              params: {
                  productId: id,
-                 clientId: user.clientId,
+                 clientId: user.id,
                  content: modalContent.content,
              }
          })
          .then(response => 
             {
-            if(response.status === 200){
-                setValidData(true);
-                hideModal();
+                if(response.status === 200) {
+                    setValidData(true);
+                    hideModal();
+                    setReload(!reload);
+                }
             }
-        })
-         .catch( err => {
+        ).catch( err => {
            switch (err.response.status) {
              case 400:
-                setValidData(false)
+                console.log(err.response.status);
                 setErrorInfo("Komentarz musi zawierać od 10 do 255 znaków.");
+                setValidData(false);
                break;
             case 429:
-                setValidData(false)
+                console.log(err.response.status);
                 setErrorInfo(`Za szybko komentujesz, musisz odczekać ${err.response.data}s przed ponownym dodaniem komentarza. `);
+                setValidData(false);
                 break;
              default:
                 setErrorInfo("Coś poszło nie tak.");
+                setValidData(false);
                break;
           }
-         }).finally(setContent({content: ""}))
+         });
+        }
 
-         setCheckModal(true)
-         getProductServer();
 
-         return response;
-       };
+    const hideModal = () => {
+        setIsOpen(false);
+        setContent({content: ""});
+        setResp(200);
+    };
+
+ 
     //-------
     const getProductServer = async () => {
         setState({ loaded: false })
-        const response = await axios
+        await axios
             .get('http://localhost:8080/product', {
                 params: {
                     productId: id,
@@ -146,12 +113,10 @@ function GetProduct() {
                     }
                 }
 
-                setProduct(response.data )
+                setProduct(response.data );
                 setTotalPages(Math.ceil(response.data.comments.length / COMMENTS_PER_PAGE));
                 
-                setState({ loaded: true })
-
-                console.log("button", Array.from(cart).includes(response.data))
+                setState({ loaded: true });
             }).catch((err) => {
                 switch (err.response.status) {
                     default:
@@ -176,11 +141,10 @@ function GetProduct() {
         if(cart !== undefined && getProduct !== undefined){
             if(Array.from(cart).filter(e => e.id === getProduct.id).length > 0){
                 setButtonDisabled({disabled: true});
-                console.log("git")
                 setButtonText(<>Dodano do koszyka<CheckSquareFill size={20}/></>)
               }
             }
-    }, [state.loaded, buttonDisabled.disabled])
+    }, [state.loaded, buttonDisabled.disabled, reload])
 
     const handleClick2 = (num) => {
         setPage(num);

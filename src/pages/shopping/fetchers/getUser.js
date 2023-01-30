@@ -43,7 +43,7 @@ const GetUser = () => {
                     break;
             }
         })
-    
+        console.log(res)
     };
       
     useEffect(() => {

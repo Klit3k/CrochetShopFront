@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import Modal from 'react-bootstrap/Modal';
 
-const AddAddress = (props) => {
+const EditContact = (props) => {
     const showModal = () => {
         props.setIsOpen(true);
     };
@@ -15,7 +15,7 @@ const AddAddress = (props) => {
       <Modal show={props.isOpen} onHide={props.hideModal}>
         <Modal.Header className='container'>
             <div className='d-flex justify-content-center text-center mx-auto'>
-            <Modal.Title >Wprowadź informacje o miejscu <br/> twojego zamieszkania</Modal.Title>
+            <Modal.Title >Zaktualizuj informacje o sobie.</Modal.Title>
             </div>
         </Modal.Header>
         <Modal.Body>
@@ -26,21 +26,18 @@ const AddAddress = (props) => {
           }
             <form className="form">
                 <div>
-                    <label htmlFor="city" className="mb-2">Miasto</label>
-                    <input className="form-control" value={props.city} onChange={props.handleInputChange} name="city"/>
+                    <label htmlFor="city" className="mb-2">Imię</label>
+                    <input className="form-control" value={props.name} onChange={props.handleInputChange} name="name"/>
                 </div>
                 <div>
-                    <label htmlFor="postalCode" className="mb-2">Kod pocztowy</label>
-                    <input className="form-control" value={props.postalCode} onChange={props.handleInputChange} name="postalCode"/>
+                    <label htmlFor="postalCode" className="mb-2">Nazwisko</label>
+                    <input className="form-control" value={props.surname} onChange={props.handleInputChange} name="surname"/>
                 </div>
                 <div>
-                    <label htmlFor="street" className="mb-2">Ulica</label>
-                    <input className="form-control" value={props.street} onChange={props.handleInputChange} name="street"/>
+                    <label htmlFor="street" className="mb-2">Numer telefonu</label>
+                    <input className="form-control" value={props.phone} onChange={props.handleInputChange} name="phone"/>
                 </div>
-                <div>
-                    <label htmlFor="houseNumber" className="mb-2">Numer budynku</label>
-                    <input className="form-control" value={props.houseNumber} onChange={props.handleInputChange} name="houseNumber"/>
-                </div>
+
             </form>
         </Modal.Body>
         <Modal.Footer>
@@ -53,4 +50,4 @@ const AddAddress = (props) => {
   )
 }
 
-export default AddAddress
+export default EditContact

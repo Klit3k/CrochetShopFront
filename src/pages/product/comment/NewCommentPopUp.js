@@ -1,9 +1,13 @@
+import { useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 function NewCommentPopUp(props) {
     const showModal = () => {
         props.setIsOpen(true);
     };
+    useEffect(() => {
 
+    }, [props.errorInfo])
+    
 
     return (
     <>
