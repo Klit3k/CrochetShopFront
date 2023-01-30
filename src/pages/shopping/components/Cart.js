@@ -55,7 +55,7 @@ export const Cart = () => {
     })
     .then(response => {       
       setRes(response.data);
-      console.log("ok")
+      console.log("CONFIRMATION");
       window.location.replace(response.data.redirectUri)
 
     })

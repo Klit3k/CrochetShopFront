@@ -36,7 +36,7 @@ const AccountPanel = () => {
                   break;
               }
             })
-            setClient(response.data)
+            setClient(response.data);
        }).catch(err => { 
             switch(err.response.status) {
                 case 404:

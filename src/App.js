@@ -27,6 +27,8 @@ import Cart from './pages/shopping/components/Cart'
 import MainPage from './pages/shopping/components/MainPage';
 import Product from './pages/shopping/components/Product';
 import ThankYou from './ThankYou';
+import RemoveProduct from './pages/product/RemoveProduct';
+import GetProductGuest from './pages/product/GetProductGuest'
 function App() {
 
   return (
@@ -50,6 +52,8 @@ function App() {
                 <Route path={'/admin'} element={<AddProduct/>}/>
                 <Route path='/admin/product/add' element={<AddProduct/>}/>
                 <Route path='/admin/product/edit' element={<EditProduct/>}/>
+                <Route path="/admin/product/remove" element={<RemoveProduct />}/>
+
               </Route>
           </Route>
 
@@ -58,7 +62,7 @@ function App() {
               <Route path={"/"} element={<GetListOfProducts/>}/>
               <Route path='/login' element={<Login/>}/>
               <Route path='/register' element={<Register/>}/>
-              <Route path='/product/:id' element={<GetProduct/>}/>
+              <Route path='/product/:id' element={<GetProductGuest/>}/>
             </Route>
           </Route>
           

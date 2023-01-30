@@ -19,7 +19,7 @@ function EditProduct() {
     const [list, setList] = useState({
         products: [],
     });
-
+    const [alertInfo, setAlertInfo] = useState(false);
     const [state, setState] = useState({
       loaded: false,
     });
@@ -35,6 +35,7 @@ function EditProduct() {
         })
         .then(response => {
           console.log(response)
+          setAlertInfo(true);
         })
         .catch( err => {
           switch (err.response.status) {
@@ -142,6 +143,11 @@ function EditProduct() {
            
            <div className="form-row">
             <div className="mb-3 form-check col-3 mx-auto">
+            { alertInfo &&
+                <div class="alert alert-success  text-center" role="alert">
+                Produkt został edytowany.
+                </div>
+                }  
               <label htmlFor="productId">Wybierz produkt</label>
               <select className="form-select" onChange={handleControlChange} value={product.productId } name="productId">
                 { list.products.map((e) => {       

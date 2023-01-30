@@ -30,8 +30,13 @@ function AdminNavbar() {
                     >
                         <ul className="navbar-nav text-center">
                             <li>
-                                <NavLink to="/admin" className="nav-link">
+                                <NavLink to="/home" className="nav-link">
                                     Home
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink to="/home/account" className="nav-link">
+                                    Konto
                                 </NavLink>
                             </li>
                             <li className="nav-item dropdown">
@@ -41,6 +46,8 @@ function AdminNavbar() {
                             <div className="dropdown-menu" aria-labelledby="toggleMobileMenu">
                             <NavLink to="product/add" style={{ textDecoration: 'none' }}><div className="dropdown-item" >Dodaj produkt</div></NavLink>
                             <NavLink to="product/edit" style={{ textDecoration: 'none' }}><div className="dropdown-item" >Edytuj produkt</div></NavLink>
+                            <NavLink to="product/remove" style={{ textDecoration: 'none' }}><div className="dropdown-item" >Usuń produkt</div></NavLink>
+
                             </div>
                         </li>
                         </ul>

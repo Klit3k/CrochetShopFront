@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-import { Link, useOutletContext } from 'react-router-dom';
+import { Link, NavLink, useOutletContext } from 'react-router-dom';
 import GetUser from '../shopping/fetchers/getUser';
 import AddAddress from '../shopping/components/credentials/AddAddress'
 import axios from 'axios'
@@ -184,6 +184,8 @@ const AccountNavbar = () => {
     }; 
     
     useEffect(() => {
+        console.log(client);
+
         getById();
     }, [errorInfo, reload, errorInfoCred])
 
@@ -200,11 +202,19 @@ const AccountNavbar = () => {
       }
 //   const { client, loaded} = useOutletContext();
   return !client ? null :  (<>
+
     <div className='container mt-5'>
         <div className='mx-auto d-flex justify-content-center'>
 
             <div className='row'>
-            <h2 className='mb-4'>{`Witaj, ${client.name}`}</h2>
+            <h2 className='mb-4'>{`Witaj, ${client.name}`}
+            
+            {
+                client.role === "ROLE_ADMIN" ? <><NavLink to="/admin"><button className='btn btn-outline-danger btn-sm mx-4'>Idź do panelu<br/> administratora</button></NavLink></>
+                : null
+            }
+            </h2>
+            
 
             {/* Contact */}
             <div className='container border mb-5'>
@@ -230,7 +240,7 @@ const AccountNavbar = () => {
                         </li>
                     </ul>
                 </div>
-                { client.address !== undefined ? (
+                { client.address !== null ? (
                 <div className='col-md'>
                 <ul className="list-group ">
                         <li className="list-group-item">

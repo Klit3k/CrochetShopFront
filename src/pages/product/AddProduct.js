@@ -9,7 +9,7 @@ function AddProduct() {
         description: "",
         price: ""
       });
-
+    const [alertInfo, setAlertInfo] = useState(false);
     var addProductServer = async () => {
         var response = await axios.post("http://localhost:8080/product", null, {
             params: {
@@ -20,6 +20,7 @@ function AddProduct() {
         })
         .then(response => {
           console.log(response);
+          setAlertInfo(true);
         })
         .catch( err => {
           switch (err.response.status) {
@@ -62,6 +63,11 @@ function AddProduct() {
           <div className="mx-auto ">
         <form onSubmit={handleSubmit}>
             <div className="mb-3 form-check col-3 mx-auto">
+            { alertInfo &&
+                <div class="alert alert-success  text-center" role="alert">
+                Produkt został dodany pomyślnie.
+                </div>
+                }  
                 <label htmlFor="name" className="form-check-label">Nazwa</label>
                 <input type="text" name="name" onChange={handleInputChange} value={product.name} className="form-control"/> 
             </div>
